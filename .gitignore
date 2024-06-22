@@ -6,9 +6,14 @@
 /out
 
 # pnpm specific
-/pnpm-lock.yaml
-/pnpmfile.js
-/pnpm-debug.log*
+pnpm-lock.yaml
+pnpmfile.js
+pnpm-debug.log*
+
+# npm specific
+package-lock.json
+npmfile.js
+npm-debug.log*
 
 # editor specific files
 .vscode/
