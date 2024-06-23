@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Giscus from '@giscus/react';
+import Giscus from "@giscus/react";
 
 const Comments = () => {
 	return (
