@@ -36,6 +36,9 @@ const components = {
 	h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
 		<h3 className="text-2xl font-bold mb-2" {...props} />
 	),
+	h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+		<h3 className="text-xl font-bold mb-1" {...props} />
+	),
 	p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
 		<p className="text-lg mb-4" {...props} />
 	),
