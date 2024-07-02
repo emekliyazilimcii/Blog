@@ -20,6 +20,7 @@ const getSortedPostsData = async (): Promise<BlogPost[]> => {
 			description: matterResult.data.description,
 			author: matterResult.data.author,
 			content: matterResult.content,
+			tags: matterResult.data.tags,
 		} as BlogPost;
 	});
 

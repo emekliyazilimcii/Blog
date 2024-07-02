@@ -23,6 +23,7 @@ async function getPostData(slug: string): Promise<BlogPost | null> {
 		description: matterResult.data.description,
 		author: matterResult.data.author,
 		content: matterResult.content,
+		tags: matterResult.data.tags
 	};
 }
 
@@ -117,6 +118,16 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
 				yazıldı
 			</p>
 			<p className="text-lg mb-4">{post.description}</p>
+			<div className="flex flex-wrap mb-4">
+				{post.tags.map((tag) => (
+					<span
+						key={tag}
+						className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+					>
+						{tag}
+					</span>
+				))}
+			</div>
 			<div className="relative py-4">
 				<div className="absolute inset-0 flex items-center">
 					<div className="w-full border-b border-gray-300" />

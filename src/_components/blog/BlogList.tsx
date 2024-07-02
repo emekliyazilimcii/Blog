@@ -14,20 +14,34 @@ const BlogList: React.FC<BlogListProps> = ({ posts }) => {
 						key={post.title}
 						className="bg-gray-100 p-4 rounded-lg flex flex-col justify-between h-full"
 					>
-						<Image
-							src={`/${post.id}.png`}
-							alt={post.title}
-							className="w-full h-48 object-cover mb-4 rounded-lg"
-							width={512}
-							height={512}
-							priority={true}
-						/>
-
+						<a
+							href={`blog/${post.id}`}
+							className="text-blue-500 hover:underline"
+						>
+							<Image
+								src={`/${post.id}.png`}
+								alt={post.title}
+								className="w-full h-48 object-cover mb-4 rounded-lg"
+								width={512}
+								height={512}
+								priority={true}
+							/>
+						</a>
 						<div className="flex-grow">
 							<h2 className="text-2xl font-bold mb-2 text-gray-900">
 								{post.title}
 							</h2>
 							<p className="text-gray-700 mb-2">{post.description}</p>
+							<div className="flex flex-wrap mb-2">
+								{post.tags?.map((tag) => (
+									<span
+										key={tag}
+										className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+									>
+										{tag}
+									</span>
+								))}
+							</div>
 						</div>
 						<div>
 							<a
@@ -37,7 +51,7 @@ const BlogList: React.FC<BlogListProps> = ({ posts }) => {
 								Oku →
 							</a>
 							<p className="text-gray-500 mt-2">
-								{post.date.toLocaleDateString("tr-TR")}
+								{new Date(post.date).toLocaleDateString("tr-TR")}
 							</p>
 						</div>
 					</div>
