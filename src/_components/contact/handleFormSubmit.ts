@@ -1,12 +1,22 @@
-import { type NextRequest, NextResponse } from "next/server";
+"use server";
+
 import axios, { type AxiosError } from "axios";
 
-export const POST = async (req: NextRequest) => {
+export interface HandleFormSubmitInterface {
+	Subject: string;
+	Comment: string;
+	Email: string;
+}
+
+const handleFormSubmit = async ({
+	Subject,
+	Comment,
+	Email,
+}: HandleFormSubmitInterface): Promise<boolean> => {
 	try {
-		const body = await req.json();
 		const response = await axios.post(
 			`https://budibase.app/api/public/v1/tables/${process.env.BUDIBASE_CONTACT_TABLE_ID}/rows`,
-			body,
+			{ Subject, Comment, Email },
 			{
 				headers: {
 					"Content-Type": "application/json",
@@ -16,23 +26,18 @@ export const POST = async (req: NextRequest) => {
 			},
 		);
 
-		return NextResponse.json(response.data, { status: response.status });
+		return response.status === 200;
 	} catch (error) {
 		const axiosError = error as AxiosError;
 		if (axiosError.response) {
 			console.error("Error response:", axiosError.response.data);
-			return NextResponse.json(axiosError.response.data, {
-				status: axiosError.response.status,
-			});
-		}
-		if (axiosError.request) {
+		} else if (axiosError.request) {
 			console.error("Error request:", axiosError.request);
-			return NextResponse.json(
-				{ error: "No response received from the server" },
-				{ status: 500 },
-			);
+		} else {
+			console.error("Error message:", axiosError.message);
 		}
-		console.error("Error message:", axiosError.message);
-		return NextResponse.json({ error: axiosError.message }, { status: 500 });
+		return false;
 	}
 };
+
+export default handleFormSubmit;

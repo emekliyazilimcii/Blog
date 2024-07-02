@@ -1,79 +1,62 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import axios, { type AxiosError } from "axios";
-
+import ContactModal from "@/_components/contact/ContactModal";
+import handleFormSubmit, {
+	type HandleFormSubmitInterface,
+} from "@/_components/contact/handleFormSubmit";
+import { useMutation } from "react-query";
 const ContactForm: React.FC = () => {
 	const [email, setEmail] = useState<string>("");
 	const [subject, setSubject] = useState<string>("");
 	const [message, setMessage] = useState<string>("");
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [dialogTitle, setDialogTitle] = useState<string>("");
+	const [dialogMessage, setDialogMessage] = useState<string>("");
 
-	const handleSubmit = async (e: FormEvent) => {
+	const mutation = useMutation({
+		mutationFn: async (data: HandleFormSubmitInterface) => {
+			return handleFormSubmit(data);
+		},
+		onSuccess: (isSuccess: boolean) => {
+			if (isSuccess) {
+				setDialogTitle("Mesaj Alındı");
+				setDialogMessage(
+					"Mesajınız için teşekkürler! Yazdıklarınızı okumak için çok heyecanlıyım.",
+				);
+				setEmail("");
+				setSubject("");
+				setMessage("");
+			} else {
+				setDialogTitle("Gönderim Hatası");
+				setDialogMessage(
+					"Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.",
+				);
+			}
+			setIsOpen(true);
+		},
+		onError: () => {
+			setDialogTitle("Gönderim Hatası");
+			setDialogMessage(
+				"Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.",
+			);
+			setIsOpen(true);
+		},
+	});
+
+	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
-
-		const data = {
-			Subject: subject,
-			Comment: message,
-			Email: email,
-		};
-
-		try {
-			const response = await axios.post("/contact/api", data);
-
-			if (response.status === 200) {
-				setIsOpen(true);
-			} else {
-				console.error("Error sending message:", response.statusText);
-			}
-		} catch (error) {
-			const axiosError = error as AxiosError;
-			if (axiosError.response) {
-				console.error("Error response:", axiosError.response.data);
-			} else if (axiosError.request) {
-				console.error("Error request:", axiosError.request);
-			} else {
-				console.error("Error message:", axiosError.message);
-			}
-		} finally {
-			setIsLoading(false);
-		}
+		mutation.mutate({ Subject: subject, Comment: message, Email: email });
 	};
 
 	return (
 		<>
-			<Dialog
-				open={isOpen}
+			<ContactModal
+				isOpen={isOpen}
 				onClose={() => setIsOpen(false)}
-				className="relative z-50"
-			>
-				<div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-					<DialogPanel className="max-w-lg space-y-4 border border-neutral-500 bg-slate-200 p-12 rounded-xl shadow-2xl">
-						<DialogTitle className="font-bold">Mesaj Alındı</DialogTitle>
-						<p>
-							Mesajınız için teşekkürler! Yazdıklarınızı okumak için çok
-							heyecanlıyım.
-						</p>
-						<div className="flex gap-4">
-							<button
-								type="button"
-								onClick={() => {
-									setIsOpen(false);
-									setEmail("");
-									setSubject("");
-									setMessage("");
-								}}
-								className="py-3 px-5 text-sm font-medium text-center text-black rounded-lg bg-slate-600 sm:w-fit hover:bg-slate-700 border"
-							>
-								Harika
-							</button>
-						</div>
-					</DialogPanel>
-				</div>
-			</Dialog>
+				title={dialogTitle}
+				message={dialogMessage}
+			/>
 			<section className="bg-white">
 				<div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
 					<h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900">
@@ -139,9 +122,9 @@ const ContactForm: React.FC = () => {
 						<button
 							type="submit"
 							className="py-3 px-5 text-sm font-medium text-center text-black rounded-lg bg-primary-700 sm:w-fit hover:bg-slate-200 border"
-							disabled={isLoading}
+							disabled={mutation.isLoading}
 						>
-							{isLoading ? "Gönderiliyor..." : "Mesaj Gönder"}
+							{mutation.isLoading ? "Gönderiliyor..." : "Mesaj Gönder"}
 						</button>
 					</form>
 				</div>
