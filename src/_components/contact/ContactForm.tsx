@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
 import ContactModal from "@/_components/contact/ContactModal";
 import handleFormSubmit, {
 	type HandleFormSubmitInterface,
 } from "@/_components/contact/handleFormSubmit";
+import { type FormEvent, useState } from "react";
 import { useMutation } from "react-query";
+
 const ContactForm: React.FC = () => {
 	const [email, setEmail] = useState<string>("");
 	const [subject, setSubject] = useState<string>("");

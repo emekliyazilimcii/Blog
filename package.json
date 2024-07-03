@@ -14,6 +14,7 @@
 		"@tailwindcss/typography": "^0.5.13",
 		"axios": "^1.7.2",
 		"gray-matter": "^4.0.3",
+		"natural": "^7.0.7",
 		"next": "^14.2.4",
 		"next-mdx-remote": "^5.0.0",
 		"react": "^18",

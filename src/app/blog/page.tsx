@@ -1,8 +1,8 @@
 import BlogList from "@/_components/blog/BlogList";
-import getSortedPostsData from "@/_components/blog/getSortedPostsData";
+import getSortedAllPosts from "@/_components/blog/getSortedAllPosts";
 
-const Home = async () => {
-	const posts = await getSortedPostsData();
+const Home = () => {
+	const posts = getSortedAllPosts();
 
 	return <BlogList posts={posts} />;
 };

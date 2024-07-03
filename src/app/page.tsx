@@ -1,9 +1,10 @@
 import Hero from "@/_components/Hero";
 import BlogList from "@/_components/blog/BlogList";
-import getSortedPostsData from "@/_components/blog/getSortedPostsData";
 
-const Home: React.FC = async () => {
-	const posts = await getSortedPostsData();
+import getSortedAllPosts from "@/_components/blog/getSortedAllPosts";
+
+const Home: React.FC = () => {
+	const posts = getSortedAllPosts();
 
 	return (
 		<>

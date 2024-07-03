@@ -1,31 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
-import type { BlogPost } from "@/_types/blog/BlogPost";
-import { notFound } from "next/navigation";
+import Recommendation from "@/_components/blog/slug/Recommendation";
+import getPostData from "@/_components/blog/slug/getPostData";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
-
-const postsDirectory = path.join(process.cwd(), "contents");
-
-async function getPostData(slug: string): Promise<BlogPost | null> {
-	const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-	if (!fs.existsSync(fullPath)) {
-		return null;
-	}
-	const fileContents = fs.readFileSync(fullPath, "utf8");
-	const matterResult = matter(fileContents);
-
-	return {
-		id: slug,
-		title: matterResult.data.title,
-		date: new Date(matterResult.data.date),
-		description: matterResult.data.description,
-		author: matterResult.data.author,
-		content: matterResult.content,
-		tags: matterResult.data.tags
-	};
-}
 
 const components = {
 	h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -102,11 +80,11 @@ interface PostPageProps {
 	};
 }
 
-const PostPage: React.FC<PostPageProps> = async ({ params }) => {
-	const post = await getPostData(params.slug);
+const PostPage: React.FC<PostPageProps> = ({ params }) => {
+	const post = getPostData(params.slug);
 
 	if (!post) {
-		notFound();
+		return <div>Post not found</div>;
 	}
 
 	return (
@@ -119,7 +97,7 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
 			</p>
 			<p className="text-lg mb-4">{post.description}</p>
 			<div className="flex flex-wrap mb-4">
-				{post.tags.map((tag) => (
+				{post.tags.map((tag: string) => (
 					<span
 						key={tag}
 						className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
@@ -142,11 +120,14 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
 			<Suspense fallback={<>Yükleniyor...</>}>
 				<MDXRemote source={post.content} components={components} />
 			</Suspense>
+
+			<Recommendation currentPost={post} />
 		</div>
 	);
 };
 
 export const generateStaticParams = async () => {
+	const postsDirectory = path.join(process.cwd(), "contents");
 	const fileNames = fs.readdirSync(postsDirectory);
 	return fileNames.map((fileName) => ({
 		slug: fileName.replace(/\.mdx$/, ""),

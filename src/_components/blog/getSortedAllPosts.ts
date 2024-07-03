@@ -1,18 +1,25 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
 import type { BlogPost } from "@/_types/blog/BlogPost";
+import matter from "gray-matter";
 
 const postsDirectory = path.join(process.cwd(), "contents");
 
-const getSortedPostsData = async (): Promise<BlogPost[]> => {
+const getSortedAllPosts = (): BlogPost[] => {
+	// Get file names under /contents
 	const fileNames = fs.readdirSync(postsDirectory);
-	const allPostsData: BlogPost[] = fileNames.map((fileName) => {
+	const allPostsData = fileNames.map((fileName) => {
+		// Remove ".mdx" from file name to get id
 		const id = fileName.replace(/\.mdx$/, "");
+
+		// Read markdown file as string
 		const fullPath = path.join(postsDirectory, fileName);
 		const fileContents = fs.readFileSync(fullPath, "utf8");
+
+		// Use gray-matter to parse the post metadata section
 		const matterResult = matter(fileContents);
 
+		// Combine the data with the id
 		return {
 			id,
 			title: matterResult.data.title,
@@ -24,9 +31,8 @@ const getSortedPostsData = async (): Promise<BlogPost[]> => {
 		} as BlogPost;
 	});
 
-	return allPostsData.sort(
-		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-	);
+	// Sort posts by date
+	return allPostsData.sort((a, b) => b.date.getTime() - a.date.getTime());
 };
 
-export default getSortedPostsData;
+export default getSortedAllPosts;
