@@ -3,16 +3,15 @@
 import request from "@/_components/request";
 
 export interface HandleFormSubmitInterface {
-	Subject: string;
-	Comment: string;
-	Email: string;
+	TeaserImage: string;
+	Content: string;
 }
 
-const handleFormSubmit = async (
+const handleMarkdownSubmit = async (
 	formData: HandleFormSubmitInterface,
 ): Promise<boolean> => {
 	const result = await request<HandleFormSubmitInterface, boolean>({
-		url: `https://budibase.app/api/public/v1/tables/${process.env.BUDIBASE_CONTACT_TABLE_ID}/rows`,
+		url: `https://budibase.app/api/public/v1/tables/${process.env.BUDIBASE_POST_TABLE_ID}/rows`,
 		method: "POST",
 		headers: {
 			"x-budibase-api-key": process.env.BUDIBASE_API_KEY || "",
@@ -24,4 +23,4 @@ const handleFormSubmit = async (
 	return result?.status === 200;
 };
 
-export default handleFormSubmit;
+export default handleMarkdownSubmit;

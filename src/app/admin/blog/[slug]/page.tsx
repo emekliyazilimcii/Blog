@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 const MarkdownEditor = dynamic(
-	() => import("@/_components/admin/MarkdownEditor"),
+	() => import("@/_components/admin/blog/[slug]/MarkdownEditor"),
 	{ ssr: false },
 );
 

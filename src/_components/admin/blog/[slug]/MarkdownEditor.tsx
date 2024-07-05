@@ -2,7 +2,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import "react-markdown-editor-lite/lib/index.css";
-import { markdownComponents } from "../markdownComponent";
+import { markdownComponents } from "../../../markdownComponent";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 	ssr: false,
