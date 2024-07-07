@@ -12,6 +12,7 @@ const handleFormSubmit = async (
 	formData: HandleFormSubmitInterface,
 ): Promise<boolean> => {
 	const result = await request<HandleFormSubmitInterface, boolean>({
+		id: "contact-form-create",
 		url: `https://budibase.app/api/public/v1/tables/${process.env.BUDIBASE_CONTACT_TABLE_ID}/rows`,
 		method: "POST",
 		headers: {

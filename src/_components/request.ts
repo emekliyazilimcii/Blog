@@ -6,25 +6,35 @@ const axios = setupCache(Axios.create(), {
 });
 
 interface ApiSenderParams<T> {
+	id: string;
 	url: string;
 	method: Method;
+	cache_invalidate_id?: string;
 	headers?: Record<string, string>;
 	data?: T;
 }
 
 const request = async <T, R>({
+	id,
 	url,
 	method,
+	cache_invalidate_id,
 	headers = {},
 	data,
 }: ApiSenderParams<T>): Promise<AxiosResponse<R> | null> => {
 	try {
 		const response: AxiosResponse<R> = await axios({
+			id,
 			url,
 			method,
 			headers: {
 				"Content-Type": "application/json",
 				...headers,
+			},
+			cache: {
+				update: cache_invalidate_id
+					? { cache_invalidate_id: "delete" }
+					: undefined,
 			},
 			data,
 		});

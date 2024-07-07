@@ -1,5 +1,6 @@
 "use server";
 
+import BlogPostFetchOperation from "@/_types/blog/BlogPostFetchOperation";
 import request from "./request";
 
 interface PostResponse {
@@ -15,6 +16,7 @@ const fetchPost = async ({
 }: FetchPostProps): Promise<PostDataRow | null> => {
 	try {
 		const response = await request<undefined, PostResponse>({
+			id: BlogPostFetchOperation.LIST_ONE,
 			url: `https://budibase.app/api/public/v1/tables/${process.env.BUDIBASE_POST_TABLE_ID}/rows/${id}`,
 			method: "GET",
 			headers: {
