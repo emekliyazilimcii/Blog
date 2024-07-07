@@ -1,7 +1,9 @@
 import Markdown from "@/_components/Markdown";
-import Recommendation from "@/_components/blog/slug/Recommendation";
-import getMarkdownPostData from "@/_components/blog/slug/getPostData";
+import Recommendation from "@/_components/blog/[slug]/Recommendation";
+import ShareButtons from "@/_components/blog/[slug]/ShareButtons";
+import getMarkdownPostData from "@/_components/blog/[slug]/getPostData";
 import fetchPost from "@/_components/fetchPost";
+import type React from "react";
 import { Suspense } from "react";
 
 interface HomeProps {
@@ -21,6 +23,9 @@ const Home: React.FC<HomeProps> = async ({ params }) => {
 		id: post._id,
 		markdownContent: post.Content,
 	});
+
+	const shareUrl = `www.emekliyazilimci.com/blog/${params.slug}`;
+	const title = markdownPost.title;
 
 	return (
 		<div className="max-w-4xl mx-auto p-4">
@@ -46,6 +51,8 @@ const Home: React.FC<HomeProps> = async ({ params }) => {
 					<Markdown content={markdownPost.content} />
 				</div>
 			</Suspense>
+
+			<ShareButtons url={shareUrl} title={title} />
 
 			<Recommendation currentPost={markdownPost} />
 		</div>

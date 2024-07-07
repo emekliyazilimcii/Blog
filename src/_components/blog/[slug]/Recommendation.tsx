@@ -1,5 +1,5 @@
 import getSortedAllPosts from "@/_components/blog/getSortedAllPosts";
-import calculateSimilarity from "@/_components/blog/slug/calculateSimilarity";
+import calculateSimilarity from "@/_components/blog/[slug]/calculateSimilarity";
 import type { BlogPost } from "@/_types/blog/BlogPost";
 import Link from "next/link";
 
