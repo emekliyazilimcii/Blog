@@ -1,13 +1,5 @@
-"use client";
-
-import useFetchContent from "@/app/admin/blog/[slug]/useFetchMarkdownContent";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-
-const MarkdownEditor = dynamic(
-	() => import("@/_components/admin/blog/[slug]/MarkdownEditor"),
-	{ ssr: false },
-);
+import PostUpdator from "@/_components/admin/blog/[slug]/PostUpdator";
+import fetchPost from "@/_components/fetchPost";
 
 interface HomeProps {
 	params: {
@@ -15,34 +7,30 @@ interface HomeProps {
 	};
 }
 
-const Home: React.FC<HomeProps> = ({ params }) => {
+const Home: React.FC<HomeProps> = async ({ params }) => {
 	const slug = params.slug;
 
-	const { content, setContent, loading, error } = useFetchContent(slug);
+	const post = await fetchPost({ id: slug });
 
-	const handleSave = async () => {
-		try {
-			// Update item content
-		} catch (error) {
-			// Handle error
-		}
-	};
+	if (!post) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				Failed to load the post!
+			</div>
+		);
+	}
 
-	if (loading) return <div>Yükleniyor...</div>;
-	if (error) return <div>Hata: {error}</div>;
+	const initTeaserImage = post.TeaserImage;
+	const initPostName = post.Name;
+	const initPostContent = post.Content;
 
 	return (
-		<div>
-			<h1 className="text-2xl font-bold mb-4">Edit {slug}</h1>
-			<MarkdownEditor content={content} onChange={setContent} />
-			<button
-				type="button"
-				onClick={handleSave}
-				className="bg-blue-500 text-white py-2 px-4 mt-4 rounded"
-			>
-				Kaydet
-			</button>
-		</div>
+		<PostUpdator
+			initTeaserImage={initTeaserImage ?? ""}
+			initPostName={initPostName ?? ""}
+			initPostContent={initPostContent ?? ""}
+			postId={slug}
+		/>
 	);
 };
 

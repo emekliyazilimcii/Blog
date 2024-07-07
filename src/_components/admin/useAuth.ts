@@ -1,5 +1,5 @@
+import checkJwt from "@/_components/admin/checkJwt";
 import { useEffect, useState } from "react";
-import checkJwt from "@/app/admin/checkJwt";
 
 interface UseAuthReturn {
 	isAuthenticated: boolean;

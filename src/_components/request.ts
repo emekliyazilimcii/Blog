@@ -1,5 +1,9 @@
-// hooks/useApiSender.ts
-import axios, { type AxiosResponse, type AxiosError, type Method } from "axios";
+import Axios, { type AxiosResponse, type AxiosError, type Method } from "axios";
+import { setupCache } from "axios-cache-interceptor";
+
+const axios = setupCache(Axios.create(), {
+	ttl: 90 * 60 * 1000, // 90 minutes in milliseconds
+});
 
 interface ApiSenderParams<T> {
 	url: string;

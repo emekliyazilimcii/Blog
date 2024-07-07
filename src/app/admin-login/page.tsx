@@ -1,6 +1,6 @@
 "use client";
 
-import createJwt from "@/app/admin/createJwt";
+import createJwt from "@/_components/admin/createJwt";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -27,10 +27,10 @@ const Home = () => {
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
 			<div className="p-8 bg-white shadow-md rounded">
-				<h1 className="text-2xl font-bold mb-4">Login</h1>
+				<h1 className="text-2xl font-bold mb-4">Admin Girişi</h1>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
-						<label className="block text-gray-700">Kullanıcı Adı</label>
+						<label className="block text-gray-700">Admin Kullanıcı Adı</label>
 						<input
 							type="text"
 							value={username}
@@ -39,7 +39,7 @@ const Home = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="block text-gray-700">Şifre</label>
+						<label className="block text-gray-700">Admin Şifre</label>
 						<input
 							type="password"
 							value={password}

@@ -1,38 +1,52 @@
-import fs from "node:fs";
-import path from "node:path";
-import type { BlogPost } from "@/_types/blog/BlogPost";
+import fetchPosts from "@/_components/fetchPosts";
+import type { BlogPost, BlogPostInfo } from "@/_types/blog/BlogPost";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), "contents");
+const getSortedAllPosts = async (): Promise<BlogPostInfo[]> => {
+	try {
+		const data = await fetchPosts();
 
-const getSortedAllPosts = (): BlogPost[] => {
-	// Get file names under /contents
-	const fileNames = fs.readdirSync(postsDirectory);
-	const allPostsData = fileNames.map((fileName) => {
-		// Remove ".mdx" from file name to get id
-		const id = fileName.replace(/\.mdx$/, "");
+		const allPostsData: BlogPostInfo[] = data
+			.map((post) => {
+				if (!post.Content) {
+					return undefined;
+				}
 
-		// Read markdown file as string
-		const fullPath = path.join(postsDirectory, fileName);
-		const fileContents = fs.readFileSync(fullPath, "utf8");
+				const matterResult = matter(post.Content);
 
-		// Use gray-matter to parse the post metadata section
-		const matterResult = matter(fileContents);
+				if (
+					!matterResult.data.title ||
+					!matterResult.data.date ||
+					!matterResult.data.description ||
+					!matterResult.data.author
+				) {
+					return undefined;
+				}
 
-		// Combine the data with the id
-		return {
-			id,
-			title: matterResult.data.title,
-			date: new Date(matterResult.data.date),
-			description: matterResult.data.description,
-			author: matterResult.data.author,
-			content: matterResult.content,
-			tags: matterResult.data.tags,
-		} as BlogPost;
-	});
+				const blogPost: BlogPost = {
+					id: post._id,
+					title: matterResult.data.title,
+					date: new Date(matterResult.data.date),
+					description: matterResult.data.description,
+					author: matterResult.data.author,
+					content: matterResult.content,
+					tags: matterResult.data.tags,
+				};
 
-	// Sort posts by date
-	return allPostsData.sort((a, b) => b.date.getTime() - a.date.getTime());
+				return {
+					blogPost,
+					blogpostTeaserImage: post.TeaserImage,
+				} as BlogPostInfo;
+			})
+			.filter((post): post is BlogPostInfo => post !== undefined);
+
+		return allPostsData.sort(
+			(a, b) => b.blogPost.date.getTime() - a.blogPost.date.getTime(),
+		);
+	} catch (error) {
+		console.error("Failed to fetch and sort posts:", error);
+		return [];
+	}
 };
 
 export default getSortedAllPosts;

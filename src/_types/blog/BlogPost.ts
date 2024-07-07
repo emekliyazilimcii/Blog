@@ -7,3 +7,8 @@ export interface BlogPost {
 	content: string;
 	tags: string[];
 }
+
+export interface BlogPostInfo {
+	blogPost: BlogPost;
+	blogpostTeaserImage: string;
+}

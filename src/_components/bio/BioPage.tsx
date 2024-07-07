@@ -1,11 +1,11 @@
 import Image from "next/image";
-import profilePic from "@/../public/profile.png";
 
 interface BioPageProps {
 	name: string;
 	profession: string;
 	description: string;
 	backgroundImage: string;
+	profileImage: string;
 }
 
 const BioPage: React.FC<BioPageProps> = ({
@@ -13,6 +13,7 @@ const BioPage: React.FC<BioPageProps> = ({
 	profession,
 	description,
 	backgroundImage,
+	profileImage,
 }) => {
 	return (
 		<div className="relative">
@@ -24,10 +25,11 @@ const BioPage: React.FC<BioPageProps> = ({
 			</div>
 			<div className="absolute top-24 left-0 right-0 text-center">
 				<Image
-					src={profilePic}
+					src={profileImage}
 					alt={name}
+					width={96}
+					height={96}
 					className="mx-auto rounded-full border-4 border-white h-24 w-24"
-					placeholder="blur"
 				/>
 				<h1 className="text-white text-2xl font-semibold mt-2">{name}</h1>
 				<p className="text-white">{profession}</p>

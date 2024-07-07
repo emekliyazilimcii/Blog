@@ -1,7 +1,8 @@
 "use client";
 
+import AdminNavigation from "@/_components/admin/AdminNavigation";
+import useAuth from "@/_components/admin/useAuth";
 import "@/app/globals.css";
-import useAuth from "@/app/admin/useAuth";
 import Link from "next/link";
 
 interface RootLayoutProps {
@@ -14,13 +15,18 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 	if (loading) return <div>Yükleniyor...</div>;
 	if (!isAuthenticated) {
 		return (
-			<Link href="/editor" className="text-center text-xl font-bold">
+			<Link href="/admin-login" className="text-center text-xl font-bold">
 				Lütfen giriş yapınız
 			</Link>
 		);
 	}
 
-	return children;
+	return (
+		<>
+			<AdminNavigation />
+			{children}
+		</>
+	);
 };
 
 export default RootLayout;

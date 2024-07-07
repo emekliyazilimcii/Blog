@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/_components/Model";
+import Modal from "@/_components/Modal";
 import handleFormSubmit from "@/_components/contact/handleFormSubmit";
 import { type FormEvent, useState } from "react";
 

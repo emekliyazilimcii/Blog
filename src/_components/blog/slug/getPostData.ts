@@ -1,20 +1,19 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { BlogPost } from "@/_types/blog/BlogPost";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), "contents");
+interface GetMarkdownPostDataProps {
+	id: string;
+	markdownContent: string;
+}
 
-const getPostData = (slug: string): BlogPost | null => {
-	const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-	if (!fs.existsSync(fullPath)) {
-		return null;
-	}
-	const fileContents = fs.readFileSync(fullPath, "utf8");
-	const matterResult = matter(fileContents);
+const getMarkdownPostData = ({
+	id,
+	markdownContent,
+}: GetMarkdownPostDataProps): BlogPost => {
+	const matterResult = matter(markdownContent);
 
 	return {
-		id: slug,
+		id: id,
 		title: matterResult.data.title,
 		date: new Date(matterResult.data.date),
 		description: matterResult.data.description,
@@ -24,4 +23,4 @@ const getPostData = (slug: string): BlogPost | null => {
 	};
 };
 
-export default getPostData;
+export default getMarkdownPostData;

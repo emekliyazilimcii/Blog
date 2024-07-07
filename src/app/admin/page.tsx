@@ -1,5 +1,3 @@
-import AdminNavigation from "@/_components/admin/AdminNavigation";
-
-const Home = () => <AdminNavigation />;
+const Home = () => <div>Selam Admin</div>;
 
 export default Home;
